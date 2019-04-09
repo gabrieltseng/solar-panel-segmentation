@@ -7,6 +7,10 @@ from .base import ResnetBase
 class Segmenter(ResnetBase):
     """A ResNet34 U-Net model, as described in
     https://github.com/fastai/fastai/blob/master/courses/dl2/carvana-unet-lrg.ipynb
+
+    Attributes:
+        imagenet_base: boolean, default: False
+            Whether or not to load weights pretrained on imagenet
     """
 
     def __init__(self, imagenet_base=False):

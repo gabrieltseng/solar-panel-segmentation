@@ -5,6 +5,10 @@ from torchvision.models import resnet34
 class ResnetBase(nn.Module):
     """ResNet pretrained on Imagenet. This serves as the
     base for the classifier, and subsequently the segmentation model
+
+    Attributes:
+        imagenet_base: boolean, default: True
+            Whether or not to load weights pretrained on imagenet
     """
     def __init__(self, imagenet_base=True):
         super().__init__()

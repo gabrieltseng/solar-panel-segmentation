@@ -5,6 +5,10 @@ from .base import ResnetBase
 
 class Classifier(ResnetBase):
     """A ResNet34 Model
+
+    Attributes:
+        imagenet_base: boolean, default: True
+            Whether or not to load weights pretrained on imagenet
     """
 
     def __init__(self, imagenet_base=True):

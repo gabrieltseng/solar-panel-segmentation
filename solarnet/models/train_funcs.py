@@ -7,6 +7,27 @@ from sklearn.metrics import roc_auc_score
 
 def train_classifier(model, train_dataloader, val_dataloader,
                      warmup=2, patience=5, max_epochs=100):
+    """Train the classifier
+
+    Parameters
+    ----------
+    model
+        The classifier to be trained
+    train_dataloader:
+        An iterator which returns batches of training images and labels from the
+        training dataset
+    val_dataloader:
+        An iterator which returns batches of training images and labels from the
+        validation dataset
+    warmup: int, default: 2
+        The number of epochs for which only the final layers (not from the ResNet base)
+        should be trained
+    patience: int, default: 5
+        The number of epochs to keep training without an improvement in performance on the
+        validation set before early stopping
+    max_epochs: int, default: 100
+        The maximum number of epochs to train for
+    """
 
     best_state_dict = model.state_dict()
     best_val_auc_roc = 0.5
@@ -35,7 +56,27 @@ def train_classifier(model, train_dataloader, val_dataloader,
 
 
 def train_segmenter(model, train_dataloader, val_dataloader, warmup=2, patience=5, max_epochs=100):
+    """Train the segmentation model
 
+    Parameters
+    ----------
+    model
+        The segmentation model to be trained
+    train_dataloader:
+        An iterator which returns batches of training images and masks from the
+        training dataset
+    val_dataloader:
+        An iterator which returns batches of training images and masks from the
+        validation dataset
+    warmup: int, default: 2
+        The number of epochs for which only the upsampling layers (not trained by the classifier)
+        should be trained
+    patience: int, default: 5
+        The number of epochs to keep training without an improvement in performance on the
+        validation set before early stopping
+    max_epochs: int, default: 100
+        The maximum number of epochs to train for
+    """
     best_state_dict = model.state_dict()
     best_loss = 1
     patience_counter = 0
@@ -57,6 +98,7 @@ def train_segmenter(model, train_dataloader, val_dataloader, warmup=2, patience=
             patience_counter += 1
             if patience_counter == patience:
                 print("Early stopping!")
+                model.cleanup()
                 model.load_state_dict(best_state_dict)
                 return None
 

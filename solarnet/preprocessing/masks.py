@@ -14,9 +14,13 @@ IMAGE_SIZES = {
 
 
 class MaskMaker:
-    """This class looks for all folders defined in FILE2CITY, and
+    """This class looks for all files defined in the metadata, and
     produces masks for all of the .tif files saved there.
     These files will be saved in <org_folder>_mask/<org_filename>.npy
+
+    Attributes:
+        data_folder: pathlib.Path
+            Path of the data folder, which should be set up as described in `data/README.md`
     """
 
     def __init__(self, data_folder=Path('data')):

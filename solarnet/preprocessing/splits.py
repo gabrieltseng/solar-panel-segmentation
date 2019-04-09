@@ -16,6 +16,10 @@ class ImageSplitter:
     For every image, we will also randomly sample (at a buffer away from the
     solar panels) a number of images which don't contain any solar panels
     to pretrain the network
+
+    Attributes:
+        data_folder: pathlib.Path
+            Path of the data folder, which should be set up as described in data/README.md
     """
 
     def __init__(self, data_folder=Path('data')):
@@ -76,6 +80,21 @@ class ImageSplitter:
         return False
 
     def process(self, imsize=224, empty_ratio=2):
+        """Creates the solar and empty images, and their corresponding masks
+
+        Parameters
+        ----------
+        imsize: int, default: 224
+            The size of the images to be generated
+        empty_ratio: int, default: 2
+            The ratio of images without solar panels to images with solar panels.
+            Because images without solar panels are randomly sampled with limited
+            patience, having this number slightly > 1 yields a roughly 1:1 ratio.
+
+        Images and masks are saved in {solar, empty}/{org_mask}, with their original
+        city in their filename (i.e. {city}_{idx}.npy) where idx is incremented with every
+        image-mask combination saved to ensure uniqueness
+        """
 
         image_radius = imsize // 2
         centroids_dict = self.read_centroids()
