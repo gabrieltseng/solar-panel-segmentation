@@ -46,7 +46,6 @@ class MaskMaker:
 
         for city, files in polygon_images.items():
             print(f'Processing {city}')
-            if city != 'Oxnard': continue
             # first, we make sure the mask file exists; if not,
             # we make it
             masked_city = self.data_folder / f"{city}_masks"
