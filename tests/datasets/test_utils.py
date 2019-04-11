@@ -31,4 +31,4 @@ class TestUtils:
 
         # Next, make sure they are not overlapping, and that no instances were left out
         mask_sum = train_mask + val_mask + test_mask
-        assert (mask_sum.max() == 1) and (mask_sum.min() == 1), "Got overlapping / missing values!"
+        assert (mask_sum == 1).all(), "Got overlapping / missing values!"
