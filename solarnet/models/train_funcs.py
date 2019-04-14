@@ -4,9 +4,15 @@ from tqdm import tqdm
 import numpy as np
 from sklearn.metrics import roc_auc_score
 
+from typing import Any, List, Tuple
 
-def train_classifier(model, train_dataloader, val_dataloader,
-                     warmup=2, patience=5, max_epochs=100):
+
+def train_classifier(model: torch.nn.Module,
+                     train_dataloader: torch.utils.data.DataLoader,
+                     val_dataloader: torch.utils.data.DataLoader,
+                     warmup: int=2,
+                     patience: int=5,
+                     max_epochs: int=100) -> None:
     """Train the classifier
 
     Parameters
@@ -55,7 +61,12 @@ def train_classifier(model, train_dataloader, val_dataloader,
                 return None
 
 
-def train_segmenter(model, train_dataloader, val_dataloader, warmup=2, patience=5, max_epochs=100):
+def train_segmenter(model: torch.nn.Module,
+                    train_dataloader: torch.utils.data.DataLoader,
+                    val_dataloader: torch.utils.data.DataLoader,
+                    warmup: int=2,
+                    patience: int=5,
+                    max_epochs: int=100) -> None:
     """Train the segmentation model
 
     Parameters
@@ -103,7 +114,12 @@ def train_segmenter(model, train_dataloader, val_dataloader, warmup=2, patience=
                 return None
 
 
-def _train_classifier_epoch(model, optimizer, train_dataloader, val_dataloader):
+def _train_classifier_epoch(model: torch.nn.Module,
+                            optimizer: torch.optim.Optimizer,
+                            train_dataloader: torch.utils.data.DataLoader,
+                            val_dataloader: torch.utils.data.DataLoader
+                            ) -> Tuple[Tuple[List[Any], float],
+                                       Tuple[List[Any], float]]:
 
     t_losses, t_true, t_pred = [], [], []
     v_losses, v_true, v_pred = [], [], []
@@ -138,8 +154,11 @@ def _train_classifier_epoch(model, optimizer, train_dataloader, val_dataloader):
     return (t_losses, train_auc), (v_losses, val_auc)
 
 
-def _train_segmenter_epoch(model, optimizer, train_dataloader, val_dataloader):
-
+def _train_segmenter_epoch(model: torch.nn.Module,
+                           optimizer: torch.optim.Optimizer,
+                           train_dataloader: torch.utils.data.DataLoader,
+                           val_dataloader: torch.utils.data.DataLoader
+                           ) -> Tuple[List[Any], List[Any]]:
     t_losses, v_losses = [], []
     model.train()
     for x, y in tqdm(train_dataloader):

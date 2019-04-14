@@ -5,6 +5,8 @@ from pathlib import Path
 from collections import defaultdict
 from tqdm import tqdm
 
+from typing import List, Tuple
+
 IMAGE_SIZES = {
     'Modesto': (5000, 5000),
     'Fresno': (5000, 5000),
@@ -23,10 +25,10 @@ class MaskMaker:
             Path of the data folder, which should be set up as described in `data/README.md`
     """
 
-    def __init__(self, data_folder=Path('data')):
+    def __init__(self, data_folder: Path=Path('data')) -> None:
         self.data_folder = data_folder
 
-    def _read_data(self):
+    def _read_data(self) -> Tuple[defaultdict, dict]:
         metadata_folder = self.data_folder / 'metadata'
 
         polygon_pixels = self._csv_to_dict_polygon_pixels(
@@ -40,7 +42,7 @@ class MaskMaker:
         )
         return polygon_images, polygon_pixels
 
-    def process(self):
+    def process(self) -> None:
 
         polygon_images, polygon_pixels = self._read_data()
 
@@ -60,7 +62,7 @@ class MaskMaker:
                 np.save(masked_city / f"{image}.npy", mask)
 
     @staticmethod
-    def _csv_to_dict_polygon_pixels(polygon_pixels):
+    def _csv_to_dict_polygon_pixels(polygon_pixels: pd.DataFrame) -> dict:
         output_dict = {}
 
         for idx, row in polygon_pixels.iterrows():
@@ -71,15 +73,15 @@ class MaskMaker:
         return output_dict
 
     @staticmethod
-    def _csv_to_dict_image_names(polygon_images):
-        output_dict = defaultdict(lambda: defaultdict(list))
+    def _csv_to_dict_image_names(polygon_images: pd.DataFrame) -> defaultdict:
+        output_dict: defaultdict = defaultdict(lambda: defaultdict(list))
 
         for idx, row in polygon_images.iterrows():
                 output_dict[row.city][row.image_name].append(int(row.polygon_id))
         return output_dict
 
     @staticmethod
-    def make_mask(coords, imsizes):
+    def make_mask(coords: List, imsizes: Tuple[int, int]) -> np.array:
         """https://stackoverflow.com/questions/3654289/scipy-create-2d-polygon-mask
         """
         poly_path = PolygonPath(coords)

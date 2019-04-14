@@ -2,13 +2,18 @@ import numpy as np
 import torch
 from pathlib import Path
 
+from typing import Optional, List, Tuple
+
 from .utils import normalize
 
 
 class ClassifierDataset:
-    def __init__(self, processed_folder=Path('data/processed'), normalize=True,
-                 device=torch.device('cuda:0' if torch.cuda.is_available() else 'cpu'),
-                 mask=None):
+    def __init__(self,
+                 processed_folder: Path=Path('data/processed'),
+                 normalize: bool=True,
+                 device: torch.device=torch.device('cuda:0' if
+                                                   torch.cuda.is_available() else 'cpu'),
+                 mask: Optional[List[bool]]=None) -> None:
 
         self.device = device
         self.normalize = normalize
@@ -23,7 +28,7 @@ class ClassifierDataset:
         if mask is not None:
             self.add_mask(mask)
 
-    def add_mask(self, mask):
+    def add_mask(self, mask: List[bool]) -> None:
         """Add a mask to the data
         """
         assert len(mask) == len(self.x_files), \
@@ -31,10 +36,10 @@ class ClassifierDataset:
         self.y = torch.as_tensor(self.y.cpu().numpy()[mask], device=self.device)
         self.x_files = [x for include, x in zip(mask, self.x_files) if include]
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self.y)
 
-    def __getitem__(self, index):
+    def __getitem__(self, index: int) -> Tuple[torch.Tensor, torch.Tensor]:
         y = self.y[index]
         x = np.load(self.x_files[index])
         if self.normalize: x = normalize(x)

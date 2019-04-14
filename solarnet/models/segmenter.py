@@ -1,6 +1,8 @@
 import torch
 from torch import nn
 
+from typing import List
+
 from .base import ResnetBase
 
 
@@ -13,7 +15,7 @@ class Segmenter(ResnetBase):
             Whether or not to load weights pretrained on imagenet
     """
 
-    def __init__(self, imagenet_base=False):
+    def __init__(self, imagenet_base: bool=False) -> None:
         super().__init__(imagenet_base=imagenet_base)
 
         self.target_modules = [str(x) for x in [2, 4, 5, 6]]
@@ -30,14 +32,14 @@ class Segmenter(ResnetBase):
         self.conv_transpose = nn.ConvTranspose2d(16, 1, 1)
         self.sigmoid = nn.Sigmoid()
 
-    def add_hooks(self):
+    def add_hooks(self) -> List[torch.utils.hooks.RemovableHandle]:
         hooks = []
         for name, child in self.pretrained.named_children():
             if name in self.target_modules:
                 hooks.append(child.register_forward_hook(self.save_output))
         return hooks
 
-    def retrieve_hooked_outputs(self):
+    def retrieve_hooked_outputs(self) -> List[torch.Tensor]:
         # to be called in the forward pass, this method returns the tensors
         # which were saved by the forward hooks
         outputs = []
@@ -46,7 +48,7 @@ class Segmenter(ResnetBase):
                 outputs.append(child.output)
         return outputs
 
-    def cleanup(self):
+    def cleanup(self) -> None:
         # removes the hooks, and the tensors which were added
         for name, child in self.pretrained.named_children():
             if name in self.target_modules:
@@ -61,13 +63,13 @@ class Segmenter(ResnetBase):
         # the hook to add to the target modules
         module.output = output
 
-    def load_base(self, state_dict):
+    def load_base(self, state_dict: dict) -> None:
         # This allows a model trained on the classifier to be loaded
         # into the model used for segmentation, even though their state_dicts
         # differ
         self.load_state_dict(state_dict, strict=False)
 
-    def forward(self, x):
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         org_input = x
         x = self.relu(self.pretrained(x))
         # we reverse the outputs so that the smallest output
@@ -81,7 +83,8 @@ class Segmenter(ResnetBase):
 
 
 class UpBlock(nn.Module):
-    def __init__(self, in_channels, across_channels, out_channels):
+    def __init__(self, in_channels: int, across_channels: int,
+                 out_channels: int) -> None:
         super().__init__()
         up_out = across_out = out_channels // 2
         self.conv_across = nn.Conv2d(across_channels, across_out, 1)
@@ -89,6 +92,6 @@ class UpBlock(nn.Module):
         self.batchnorm = nn.BatchNorm2d(out_channels)
         self.relu = nn.ReLU()
 
-    def forward(self, x_up, x_across):
+    def forward(self, x_up: torch.Tensor, x_across: torch.Tensor) -> torch.Tensor:
         joint = torch.cat((self.conv_transpose(x_up), self.conv_across(x_across)), dim=1)
         return self.batchnorm(self.relu(joint))
