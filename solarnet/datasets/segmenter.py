@@ -56,5 +56,5 @@ class SegmenterDataset:
         y = np.load(self.mask_solar_files[index])
         if self.transform_images: x, y = self._transform_images(x, y)
         if self.normalize: x = normalize(x)
-        return torch.as_tensor(x, device=self.device).float(), \
-            torch.as_tensor(y, device=self.device).float()
+        return torch.as_tensor(x.copy(), device=self.device).float(), \
+            torch.as_tensor(y.copy(), device=self.device).float()

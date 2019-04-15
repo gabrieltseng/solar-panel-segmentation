@@ -52,4 +52,4 @@ class ClassifierDataset:
         x = np.load(self.x_files[index])
         if self.transform_images: x = self._transform_images(x)
         if self.normalize: x = normalize(x)
-        return torch.as_tensor(x, device=self.device).float(), y
+        return torch.as_tensor(x.copy(), device=self.device).float(), y
