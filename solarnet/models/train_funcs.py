@@ -98,7 +98,6 @@ def train_segmenter(model, train_dataloader, val_dataloader, warmup=2, patience=
             patience_counter += 1
             if patience_counter == patience:
                 print("Early stopping!")
-                model.cleanup()
                 model.load_state_dict(best_state_dict)
                 return None
 
