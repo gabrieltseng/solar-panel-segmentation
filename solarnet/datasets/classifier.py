@@ -9,7 +9,7 @@ from .transforms import no_change, horizontal_flip, vertical_flip, colour_jitter
 
 class ClassifierDataset:
     def __init__(self, processed_folder=Path('data/processed'), normalize=True,
-                 transform_images=True, mask=None,
+                 transform_images=False, mask=None,
                  device=torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')):
 
         self.device = device
