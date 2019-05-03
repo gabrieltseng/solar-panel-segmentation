@@ -96,7 +96,7 @@ python run.py train_both
 with an environment, install Anaconda from the link above, and (from this directory) run
 
 ```bash
-conda env create -f environment.yml
+conda env create -f environment.mac.yml
 ```
 This will create an environment named `solar` with all the necessary packages to run the code. To 
 activate this environment, run
