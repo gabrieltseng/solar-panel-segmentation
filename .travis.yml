@@ -1,4 +1,6 @@
 language: python
+os:
+  - osx
 install:
   - sudo apt-get update
   - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
@@ -10,7 +12,7 @@ install:
   # Useful for debugging any issues with conda
   - conda info -a
 
-  - conda env create -f environment.ubuntu.yml
+  - conda env create -f environment.mac.yml
   - source activate solar
 
 script:
