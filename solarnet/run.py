@@ -46,27 +46,31 @@ class RunTask:
         splitter.process(imsize=imsize, empty_ratio=empty_ratio)
 
     @staticmethod
-    def train_classifier(max_epochs=100, warmup=2, patience=5, val_size=0.1,
-                         test_size=0.1, data_folder='data',
+    def train_classifier(num_epochs=20, warmup=2, val_size=0.1, test_size=0.1, data_folder='data',
+                         swa_start_epochs=10, swa_freq_epochs=1, swa_lr=0.05,
                          device=torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')):
         """Train the classifier
 
         Parameters
         ----------
-        max_epochs: int, default: 100
+        num_epochs: int, default: 20
             The maximum number of epochs to train for
         warmup: int, default: 2
             The number of epochs for which only the final layers (not from the ResNet base)
             should be trained
-        patience: int, default: 5
-            The number of epochs to keep training without an improvement in performance on the
-            validation set before early stopping
         val_size: float < 1, default: 0.1
             The ratio of the entire dataset to use for the validation set
         test_size: float < 1, default: 0.1
             The ratio of the entire dataset to use for the test set
         data_folder: pathlib.Path
             Path of the data folder, which should be set up as described in `data/README.md`
+        swa_start_epochs: int, default: 10
+            The number of epochs after training has started (including the warmup) before
+            weight averaging should take place
+        swa_freq_epochs: int, default: 1
+            Number of epochs between subsequent updates of SWA averages
+        swa_lr: float, default: 0.05
+            The learning rate to use starting from swa_start in automatic mode
         device: torch.device, default: cuda if available, else cpu
             The device to train the models on
         """
@@ -92,8 +96,9 @@ class RunTask:
                                                        transform_images=False),
                                      batch_size=64)
 
-        train_classifier(model, train_dataloader, val_dataloader, max_epochs=max_epochs,
-                         warmup=warmup, patience=patience)
+        train_classifier(model, train_dataloader, val_dataloader, num_epochs=num_epochs,
+                         warmup=warmup, swa_start_epochs=swa_start_epochs,
+                         swa_freq_epochs=swa_freq_epochs, swa_lr=swa_lr)
 
         savedir = data_folder / 'models'
         if not savedir.exists(): savedir.mkdir()

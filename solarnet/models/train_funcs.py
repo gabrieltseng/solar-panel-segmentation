@@ -1,5 +1,6 @@
 import torch
 import torch.nn.functional as F
+from torchcontrib.optim import SWA
 from tqdm import tqdm
 import numpy as np
 from sklearn.metrics import roc_auc_score
@@ -11,8 +12,10 @@ def train_classifier(model: torch.nn.Module,
                      train_dataloader: torch.utils.data.DataLoader,
                      val_dataloader: torch.utils.data.DataLoader,
                      warmup: int = 2,
-                     patience: int = 5,
-                     max_epochs: int = 100) -> None:
+                     num_epochs: int = 20,
+                     swa_start_epochs: int = 10,
+                     swa_freq_epochs: int = 1,
+                     swa_lr: float = 0.05) -> None:
     """Train the classifier
 
     Parameters
@@ -28,37 +31,33 @@ def train_classifier(model: torch.nn.Module,
     warmup: int, default: 2
         The number of epochs for which only the final layers (not from the ResNet base)
         should be trained
-    patience: int, default: 5
-        The number of epochs to keep training without an improvement in performance on the
-        validation set before early stopping
-    max_epochs: int, default: 100
-        The maximum number of epochs to train for
+    num_epochs: int, default: 20
+        The number of epochs to train for
+    swa_start_epochs: int, default: 10
+        The number of epochs after training has started (including the warmup) before
+        weight averaging should take place
+    swa_freq_epochs: int, default: 1
+        Number of epochs between subsequent updates of SWA averages
+    swa_lr: float, default: 0.05
+        The learning rate to use starting from swa_start in automatic mode
     """
 
-    best_state_dict = model.state_dict()
-    best_val_auc_roc = 0.5
-    patience_counter = 0
-    for i in range(max_epochs):
+    for i in range(num_epochs):
         if i <= warmup:
             # we start by finetuning the model
             optimizer = torch.optim.Adam([pam for name, pam in
                                           model.named_parameters() if 'classifier' in name])
         else:
             # then, we train the whole thing
-            optimizer = torch.optim.Adam(model.parameters())
+            steps_per_epoch = len(train_dataloader)
+            base_opt = torch.optim.Adam(model.parameters())
+            optimizer = SWA(base_opt, swa_start=(swa_start_epochs - warmup) * steps_per_epoch,
+                            swa_freq=swa_freq_epochs * steps_per_epoch,
+                            swa_lr=swa_lr)
 
-        train_data, val_data = _train_classifier_epoch(model, optimizer, train_dataloader,
+        _, _ = _train_classifier_epoch(model, optimizer, train_dataloader,
                                                        val_dataloader)
-        if val_data[1] > best_val_auc_roc:
-            best_val_auc_roc = val_data[1]
-            patience_counter = 0
-            best_state_dict = model.state_dict()
-        else:
-            patience_counter += 1
-            if patience_counter == patience:
-                print("Early stopping!")
-                model.load_state_dict(best_state_dict)
-                return None
+    optimizer.swap_swa_sgd()
 
 
 def train_segmenter(model: torch.nn.Module,

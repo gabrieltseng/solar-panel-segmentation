@@ -131,3 +131,4 @@ dependencies:
   - torchvision=0.2.2
   - pip:
     - torch==1.0.1.post2
+    - torchcontrib==0.0.2
