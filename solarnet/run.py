@@ -83,9 +83,11 @@ class RunTask:
 
         dataset.add_mask(train_mask)
         train_dataloader = DataLoader(dataset, batch_size=64, shuffle=True)
-        val_dataloader = DataLoader(ClassifierDataset(mask=val_mask, processed_folder=processed_folder),
+        val_dataloader = DataLoader(ClassifierDataset(mask=val_mask, processed_folder=processed_folder,
+                                                      transform_images=False),
                                     batch_size=64, shuffle=True)
-        test_dataloader = DataLoader(ClassifierDataset(mask=test_mask, processed_folder=processed_folder),
+        test_dataloader = DataLoader(ClassifierDataset(mask=test_mask, processed_folder=processed_folder,
+                                                       transform_images=False),
                                      batch_size=64)
 
         train_classifier(model, train_dataloader, val_dataloader, max_epochs=max_epochs, warmup=warmup,
@@ -149,9 +151,11 @@ class RunTask:
 
         dataset.add_mask(train_mask)
         train_dataloader = DataLoader(dataset, batch_size=64, shuffle=True)
-        val_dataloader = DataLoader(SegmenterDataset(mask=val_mask, processed_folder=processed_folder),
+        val_dataloader = DataLoader(SegmenterDataset(mask=val_mask, processed_folder=processed_folder,
+                                                     transform_images=False),
                                     batch_size=64, shuffle=True)
-        test_dataloader = DataLoader(SegmenterDataset(mask=test_mask, processed_folder=processed_folder),
+        test_dataloader = DataLoader(SegmenterDataset(mask=test_mask, processed_folder=processed_folder,
+                                                      transform_images=False),
                                      batch_size=64)
 
         train_segmenter(model, train_dataloader, val_dataloader, max_epochs=max_epochs, warmup=warmup,

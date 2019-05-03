@@ -10,9 +10,9 @@ from typing import Any, List, Tuple
 def train_classifier(model: torch.nn.Module,
                      train_dataloader: torch.utils.data.DataLoader,
                      val_dataloader: torch.utils.data.DataLoader,
-                     warmup: int=2,
-                     patience: int=5,
-                     max_epochs: int=100) -> None:
+                     warmup: int = 2,
+                     patience: int = 5,
+                     max_epochs: int = 100) -> None:
     """Train the classifier
 
     Parameters
@@ -64,9 +64,9 @@ def train_classifier(model: torch.nn.Module,
 def train_segmenter(model: torch.nn.Module,
                     train_dataloader: torch.utils.data.DataLoader,
                     val_dataloader: torch.utils.data.DataLoader,
-                    warmup: int=2,
-                    patience: int=5,
-                    max_epochs: int=100) -> None:
+                    warmup: int = 2,
+                    patience: int = 5,
+                    max_epochs: int = 100) -> None:
     """Train the segmentation model
 
     Parameters
@@ -109,7 +109,6 @@ def train_segmenter(model: torch.nn.Module,
             patience_counter += 1
             if patience_counter == patience:
                 print("Early stopping!")
-                model.cleanup()
                 model.load_state_dict(best_state_dict)
                 return None
 
