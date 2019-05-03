@@ -12,7 +12,7 @@ install:
   # Useful for debugging any issues with conda
   - conda info -a
 
-  - conda create -f environment.yml -n solar
+  - conda env create -f environment.yml
   - source activate solar
 
 script:
