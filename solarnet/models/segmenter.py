@@ -15,7 +15,7 @@ class Segmenter(ResnetBase):
             Whether or not to load weights pretrained on imagenet
     """
 
-    def __init__(self, imagenet_base: bool=False) -> None:
+    def __init__(self, imagenet_base: bool = False) -> None:
         super().__init__(imagenet_base=imagenet_base)
 
         self.target_modules = [str(x) for x in [2, 4, 5, 6]]

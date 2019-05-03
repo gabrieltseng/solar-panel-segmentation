@@ -25,7 +25,7 @@ class MaskMaker:
             Path of the data folder, which should be set up as described in `data/README.md`
     """
 
-    def __init__(self, data_folder: Path=Path('data')) -> None:
+    def __init__(self, data_folder: Path = Path('data')) -> None:
         self.data_folder = data_folder
 
     def _read_data(self) -> Tuple[defaultdict, dict]:

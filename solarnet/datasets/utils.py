@@ -33,8 +33,8 @@ def denormalize(image: np.ndarray) -> np.ndarray:
     return (image * 255).astype(int)
 
 
-def make_masks(dataset_length: int, val_size: float=0.1,
-               test_size: float=0.1) -> Tuple[List[bool], List[bool], List[bool]]:
+def make_masks(dataset_length: int, val_size: float = 0.1,
+               test_size: float = 0.1) -> Tuple[List[bool], List[bool], List[bool]]:
     """Returns three boolean arrays of length `dataset_length`,
     representing the train set, validation set and test set. These
     arrays can be passed to `Dataset.add_mask` to yield the appropriate

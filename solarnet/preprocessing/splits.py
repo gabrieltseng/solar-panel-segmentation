@@ -24,7 +24,7 @@ class ImageSplitter:
             Path of the data folder, which should be set up as described in data/README.md
     """
 
-    def __init__(self, data_folder: Path=Path('data')) -> None:
+    def __init__(self, data_folder: Path = Path('data')) -> None:
         self.data_folder = data_folder
 
         # setup; make the necessary folders
@@ -111,7 +111,8 @@ class ImageSplitter:
 
                 org_x_imsize, org_y_imsize = IMAGE_SIZES[city]
                 if org_file.shape != (3, org_x_imsize, org_y_imsize):
-                    print(f'{city}/{image_name}.tif is malformed with shape {org_file.shape}. Skipping!')
+                    print(f'{city}/{image_name}.tif is malformed with shape {org_file.shape}. '
+                          f'Skipping!')
                     continue
                 mask_file = np.load(self.data_folder / f"{city}_masks/{image_name}.npy")
 
@@ -137,8 +138,8 @@ class ImageSplitter:
                 patience, max_patience = 0, 10
                 num_empty, max_num_empty = 0, len(centroids) * empty_ratio
                 while (patience < max_patience) and (num_empty < max_num_empty):
-                    rand_x, rand_y = randint(0, org_x_imsize - imsize), randint(0, org_y_imsize - imsize)
-
+                    rand_x = randint(0, org_x_imsize - imsize)
+                    rand_y = randint(0, org_y_imsize - imsize)
                     rand_x_max, rand_y_max = rand_x + imsize, rand_y + imsize
                     # this makes sure no solar panel is present
                     mask_candidate = mask_file[rand_x: rand_x_max, rand_y: rand_y_max]

@@ -72,7 +72,7 @@ class TestMasks:
         for polygon_id, vertices in polygon_dict.items():
             assert len(vertices) == polygon_shapes[polygon_id], \
                 f'Got {len(vertices)} for polygon {polygon_id}, ' \
-                    f'expected {polygon_shapes[polygon_id]}'
+                f'expected {polygon_shapes[polygon_id]}'
 
     def test_process(self, tmp_path):
         """Test the process runs end to end

@@ -12,7 +12,7 @@ class Classifier(ResnetBase):
             Whether or not to load weights pretrained on imagenet
     """
 
-    def __init__(self, imagenet_base: bool=True) -> None:
+    def __init__(self, imagenet_base: bool = True) -> None:
         super().__init__(imagenet_base=imagenet_base)
 
         self.avgpool = nn.AvgPool2d(7, stride=1)

@@ -25,7 +25,7 @@ class SegmenterDataset:
         # other images should be filtered out by the classifier
         solar_folder = processed_folder / 'solar'
 
-        self.org_solar_files = list((solar_folder/ 'org').glob("*.npy"))
+        self.org_solar_files = list((solar_folder / 'org').glob("*.npy"))
         self.mask_solar_files = [solar_folder / 'mask' / f.name for f in self.org_solar_files]
 
         if mask is not None:

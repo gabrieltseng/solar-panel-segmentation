@@ -11,7 +11,7 @@ class ResnetBase(nn.Module):
         imagenet_base: boolean, default: True
             Whether or not to load weights pretrained on imagenet
     """
-    def __init__(self, imagenet_base: bool=True) -> None:
+    def __init__(self, imagenet_base: bool = True) -> None:
         super().__init__()
 
         resnet = resnet34(pretrained=imagenet_base).float()
