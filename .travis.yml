@@ -14,4 +14,6 @@ install:
   - conda create -f environment.yml -n solar
   - source activate solar
 
-script: pytest && mypy
+script:
+  - mypy
+  - pytest
