@@ -4,14 +4,19 @@ mask transformations (if applicable)
 """
 
 import numpy as np
+from typing import Tuple, Optional
 
 
-def no_change(image, mask=None):
+def no_change(image: np.ndarray,
+              mask: Optional[np.ndarray] = None) -> Tuple[np.ndarray,
+                                                          Optional[np.ndarray]]:
     if mask is None: return image
     return image, mask
 
 
-def horizontal_flip(image, mask=None):
+def horizontal_flip(image: np.ndarray,
+                    mask: Optional[np.ndarray] = None) -> Tuple[np.ndarray,
+                                                                Optional[np.ndarray]]:
     # input: image[channels, height, width]
     image = image[:, :, ::-1]
     if mask is None: return image
@@ -20,7 +25,9 @@ def horizontal_flip(image, mask=None):
     return image, mask
 
 
-def vertical_flip(image, mask=None):
+def vertical_flip(image: np.ndarray,
+                  mask: Optional[np.ndarray] = None) -> Tuple[np.ndarray,
+                                                              Optional[np.ndarray]]:
     # input: image[channels, height, width]
     image = image[:, ::-1, :]
     if mask is None: return image
@@ -29,7 +36,9 @@ def vertical_flip(image, mask=None):
     return image, mask
 
 
-def colour_jitter(image, mask=None):
+def colour_jitter(image: np.ndarray,
+                  mask: Optional[np.ndarray] = None) -> Tuple[np.ndarray,
+                                                              Optional[np.ndarray]]:
     _, height, width = image.shape
     zitter = np.zeros_like(image)
 

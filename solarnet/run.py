@@ -83,15 +83,17 @@ class RunTask:
 
         dataset.add_mask(train_mask)
         train_dataloader = DataLoader(dataset, batch_size=64, shuffle=True)
-        val_dataloader = DataLoader(ClassifierDataset(mask=val_mask, processed_folder=processed_folder,
+        val_dataloader = DataLoader(ClassifierDataset(mask=val_mask,
+                                                      processed_folder=processed_folder,
                                                       transform_images=False),
                                     batch_size=64, shuffle=True)
-        test_dataloader = DataLoader(ClassifierDataset(mask=test_mask, processed_folder=processed_folder,
+        test_dataloader = DataLoader(ClassifierDataset(mask=test_mask,
+                                                       processed_folder=processed_folder,
                                                        transform_images=False),
                                      batch_size=64)
 
-        train_classifier(model, train_dataloader, val_dataloader, max_epochs=max_epochs, warmup=warmup,
-                         patience=patience)
+        train_classifier(model, train_dataloader, val_dataloader, max_epochs=max_epochs,
+                         warmup=warmup, patience=patience)
 
         savedir = data_folder / 'models'
         if not savedir.exists(): savedir.mkdir()
@@ -133,7 +135,8 @@ class RunTask:
             Path of the data folder, which should be set up as described in `data/README.md`
         use_classifier: boolean, default: True
             Whether to use the pretrained classifier (saved in data/models/classifier.model by the
-            train_classifier step) as the weights for the downsampling step of the segmentation model
+            train_classifier step) as the weights for the downsampling step of the segmentation
+            model
         device: torch.device, default: cuda if available, else cpu
             The device to train the models on
         """
@@ -151,15 +154,17 @@ class RunTask:
 
         dataset.add_mask(train_mask)
         train_dataloader = DataLoader(dataset, batch_size=64, shuffle=True)
-        val_dataloader = DataLoader(SegmenterDataset(mask=val_mask, processed_folder=processed_folder,
+        val_dataloader = DataLoader(SegmenterDataset(mask=val_mask,
+                                                     processed_folder=processed_folder,
                                                      transform_images=False),
                                     batch_size=64, shuffle=True)
-        test_dataloader = DataLoader(SegmenterDataset(mask=test_mask, processed_folder=processed_folder,
+        test_dataloader = DataLoader(SegmenterDataset(mask=test_mask,
+                                                      processed_folder=processed_folder,
                                                       transform_images=False),
                                      batch_size=64)
 
-        train_segmenter(model, train_dataloader, val_dataloader, max_epochs=max_epochs, warmup=warmup,
-                        patience=patience)
+        train_segmenter(model, train_dataloader, val_dataloader, max_epochs=max_epochs,
+                        warmup=warmup, patience=patience)
 
         if not model_dir.exists(): model_dir.mkdir()
         torch.save(model.state_dict(), model_dir / 'segmenter.model')
@@ -177,14 +182,16 @@ class RunTask:
         np.save(model_dir / 'segmenter_preds.npy', np.concatenate(preds))
         np.save(model_dir / 'segmenter_true.npy', np.concatenate(true))
 
-    def train_both(self, c_max_epochs=100, c_warmup=2, c_patience=5, c_val_size=0.1, c_test_size=0.1,
-                   s_max_epochs=100, s_warmup=2, s_patience=5, s_val_size=0.1, s_test_size=0.1,
-                   data_folder='data',
+    def train_both(self, c_max_epochs=100, c_warmup=2, c_patience=5, c_val_size=0.1,
+                   c_test_size=0.1, s_max_epochs=100, s_warmup=2, s_patience=5,
+                   s_val_size=0.1, s_test_size=0.1, data_folder='data',
                    device=torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')):
         """Train the classifier, and use it to train the segmentation model.
         """
+        data_folder = Path(data_folder)
         self.train_classifier(max_epochs=c_max_epochs, val_size=c_val_size, test_size=c_test_size,
-                              warmup=c_warmup, patience=c_patience, data_folder=data_folder, device=device)
+                              warmup=c_warmup, patience=c_patience, data_folder=data_folder,
+                              device=device)
         self.train_segmenter(max_epochs=s_max_epochs, val_size=s_val_size, test_size=s_test_size,
                              warmup=s_warmup, patience=s_patience, use_classifier=True,
                              data_folder=data_folder, device=device)

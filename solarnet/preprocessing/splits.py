@@ -6,6 +6,8 @@ from pathlib import Path
 import rasterio
 from tqdm import tqdm
 
+from typing import Tuple
+
 from .masks import IMAGE_SIZES
 
 
@@ -22,7 +24,7 @@ class ImageSplitter:
             Path of the data folder, which should be set up as described in data/README.md
     """
 
-    def __init__(self, data_folder=Path('data')):
+    def __init__(self, data_folder: Path = Path('data')) -> None:
         self.data_folder = data_folder
 
         # setup; make the necessary folders
@@ -32,18 +34,18 @@ class ImageSplitter:
         self.solar_panels = self._setup_folder('solar')
         self.empty = self._setup_folder('empty')
 
-    def _setup_folder(self, folder_name):
+    def _setup_folder(self, folder_name: str) -> Path:
 
-        folder_name = self.processed_folder / folder_name
-        if not folder_name.exists(): folder_name.mkdir()
+        full_folder_path = self.processed_folder / folder_name
+        if not full_folder_path.exists(): full_folder_path.mkdir()
 
         for subfolder in ['org', 'mask']:
-            subfolder_name = folder_name / subfolder
+            subfolder_name = full_folder_path / subfolder
             if not subfolder_name.exists(): subfolder_name.mkdir()
 
-        return folder_name
+        return full_folder_path
 
-    def read_centroids(self):
+    def read_centroids(self) -> defaultdict:
 
         metadata = pd.read_csv(self.data_folder / 'metadata/polygonDataExceptVertices.csv',
                                usecols=['city', 'image_name', 'centroid_latitude_pixels',
@@ -53,7 +55,7 @@ class ImageSplitter:
         print(f'Dropped {org_len - len(metadata)} rows due to NaN values')
 
         # for each image, we want to know where the solar panel centroids are
-        output_dict = defaultdict(lambda: defaultdict(set))
+        output_dict: defaultdict = defaultdict(lambda: defaultdict(set))
 
         for idx, row in metadata.iterrows():
             output_dict[row.city][row.image_name].add((
@@ -62,7 +64,8 @@ class ImageSplitter:
         return output_dict
 
     @staticmethod
-    def adjust_coords(coords, image_radius, org_imsize):
+    def adjust_coords(coords: Tuple[float, float], image_radius: int,
+                      org_imsize: Tuple[int, int]) -> Tuple[float, float]:
         x_imsize, y_imsize = org_imsize
         x, y = coords
         # we make sure that the centroid isn't at the edge of the image
@@ -74,12 +77,12 @@ class ImageSplitter:
         return x, y
 
     @staticmethod
-    def size_okay(image, imsize):
+    def size_okay(image: np.array, imsize: int) -> bool:
         if image.shape == (3, imsize, imsize):
             return True
         return False
 
-    def process(self, imsize=224, empty_ratio=2):
+    def process(self, imsize: int=224, empty_ratio: int=2) -> None:
         """Creates the solar and empty images, and their corresponding masks
 
         Parameters
@@ -108,7 +111,8 @@ class ImageSplitter:
 
                 org_x_imsize, org_y_imsize = IMAGE_SIZES[city]
                 if org_file.shape != (3, org_x_imsize, org_y_imsize):
-                    print(f'{city}/{image_name}.tif is malformed with shape {org_file.shape}. Skipping!')
+                    print(f'{city}/{image_name}.tif is malformed with shape {org_file.shape}. '
+                          f'Skipping!')
                     continue
                 mask_file = np.load(self.data_folder / f"{city}_masks/{image_name}.npy")
 
@@ -134,8 +138,8 @@ class ImageSplitter:
                 patience, max_patience = 0, 10
                 num_empty, max_num_empty = 0, len(centroids) * empty_ratio
                 while (patience < max_patience) and (num_empty < max_num_empty):
-                    rand_x, rand_y = randint(0, org_x_imsize - imsize), randint(0, org_y_imsize - imsize)
-
+                    rand_x = randint(0, org_x_imsize - imsize)
+                    rand_y = randint(0, org_y_imsize - imsize)
                     rand_x_max, rand_y_max = rand_x + imsize, rand_y + imsize
                     # this makes sure no solar panel is present
                     mask_candidate = mask_file[rand_x: rand_x_max, rand_y: rand_y_max]

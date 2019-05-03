@@ -1,9 +1,11 @@
 import numpy as np
 
+from typing import List, Tuple
+
 MEAN, STD = [0.485, 0.456, 0.406], [0.229, 0.224, 0.225]
 
 
-def normalize(image):
+def normalize(image: np.ndarray) -> np.ndarray:
     """Normalized an image (or a set of images), as per
     https://pytorch.org/docs/1.0.0/torchvision/models.html
 
@@ -20,7 +22,7 @@ def normalize(image):
     return np.moveaxis((np.moveaxis(image, source, dest) - MEAN) * STD, dest, source)
 
 
-def denormalize(image):
+def denormalize(image: np.ndarray) -> np.ndarray:
     """Reverses what normalize does
     """
     # determine if we are dealing with a single image, or a
@@ -31,7 +33,8 @@ def denormalize(image):
     return (image * 255).astype(int)
 
 
-def make_masks(dataset_length, val_size=0.1, test_size=0.1):
+def make_masks(dataset_length: int, val_size: float = 0.1,
+               test_size: float = 0.1) -> Tuple[List[bool], List[bool], List[bool]]:
     """Returns three boolean arrays of length `dataset_length`,
     representing the train set, validation set and test set. These
     arrays can be passed to `Dataset.add_mask` to yield the appropriate
