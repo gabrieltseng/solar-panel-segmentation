@@ -82,7 +82,7 @@ class ImageSplitter:
             return True
         return False
 
-    def process(self, imsize: int=224, empty_ratio: int=2) -> None:
+    def process(self, imsize: int = 224, empty_ratio: int = 2) -> None:
         """Creates the solar and empty images, and their corresponding masks
 
         Parameters
