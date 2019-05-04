@@ -1,10 +1,12 @@
-name: solar
+name: solar_ubuntu
 channels:
   - pytorch
   - conda-forge
   - defaults
 dependencies:
   - affine=2.2.2
+  - apipkg=1.5
+  - atomicwrites=1.3.0
   - attrs=19.1.0
   - boost-cpp=1.68.0
   - bzip2=1.0.6
@@ -16,6 +18,7 @@ dependencies:
   - cligj=0.5.0
   - cycler=0.10.0
   - dbus=1.13.6
+  - execnet=1.6.0
   - expat=2.2.5
   - fontconfig=2.13.1
   - freetype=2.10.0
@@ -51,18 +54,27 @@ dependencies:
   - libxml2=2.9.9
   - matplotlib=3.0.3
   - matplotlib-base=3.0.3
+  - more-itertools=4.3.0
+  - mypy=0.701
+  - mypy_extensions=0.4.1
   - numpy=1.16.3
   - openblas=0.3.6
   - openjpeg=2.3.1
   - openssl=1.1.1b
   - pandas=0.24.2
   - pcre=8.41
+  - pep8=1.7.1
   - pixman=0.34.0
+  - pluggy=0.9.0
   - poppler=0.67.0
   - poppler-data=0.4.9
   - proj4=6.0.0
+  - psutil=5.4.8
   - pthread-stubs=0.4
+  - py=1.8.0
   - pyparsing=2.4.0
+  - pytest=4.4.1
+  - pytest-pep8=1.0.6
   - python-dateutil=2.8.0
   - pytz=2019.1
   - qt=5.9.7
@@ -72,6 +84,7 @@ dependencies:
   - tk=8.6.9
   - tornado=6.0.2
   - tqdm=4.31.1
+  - typed-ast=1.3.5
   - xerces-c=3.2.2
   - xorg-kbproto=1.0.7
   - xorg-libice=1.0.9
@@ -104,6 +117,7 @@ dependencies:
   - postgresql=11.2
   - pycparser=2.19
   - pyqt=5.9.2
+  - pytest-cache=1.0
   - python=3.6.8
   - readline=7.0
   - setuptools=41.0.1
@@ -117,3 +131,5 @@ dependencies:
   - pip:
     - torch==1.1.0
     - torchvision==0.2.2
+prefix: /home/ec2-user/anaconda3/envs/solar_ubuntu
+
