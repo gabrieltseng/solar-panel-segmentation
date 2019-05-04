@@ -1,4 +1,4 @@
-name: solar_ubuntu
+name: solar
 channels:
   - pytorch
   - conda-forge
@@ -131,5 +131,3 @@ dependencies:
   - pip:
     - torch==1.1.0
     - torchvision==0.2.2
-prefix: /home/ec2-user/anaconda3/envs/solar_ubuntu
-
