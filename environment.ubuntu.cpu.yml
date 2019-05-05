@@ -8,6 +8,7 @@ dependencies:
   - apipkg=1.5
   - atomicwrites=1.3.0
   - attrs=19.1.0
+  - blas=2.8
   - boost-cpp=1.68.0
   - bzip2=1.0.6
   - ca-certificates=2019.3.9
@@ -21,7 +22,6 @@ dependencies:
   - execnet=1.6.0
   - expat=2.2.5
   - fontconfig=2.13.1
-  - freetype=2.10.0
   - freexl=1.0.5
   - geos=3.7.1
   - geotiff=1.5.1
@@ -44,20 +44,20 @@ dependencies:
   - libiconv=1.15
   - libkml=1.3.0
   - liblapack=3.8.0
+  - liblapacke=3.8.0
   - libnetcdf=4.6.2
-  - libpng=1.6.37
   - libspatialite=4.3.0a
   - libssh2=1.8.2
-  - libtiff=4.0.10
   - libuuid=2.32.1
   - libxcb=1.13
   - libxml2=2.9.9
   - matplotlib=3.0.3
   - matplotlib-base=3.0.3
+  - mkl_fft=1.0.12
+  - mkl_random=1.0.4
   - more-itertools=4.3.0
   - mypy=0.701
   - mypy_extensions=0.4.1
-  - numpy=1.16.3
   - openblas=0.3.6
   - openjpeg=2.3.1
   - openssl=1.1.1b
@@ -79,6 +79,8 @@ dependencies:
   - pytz=2019.1
   - qt=5.9.7
   - rasterio=1.0.22
+  - scikit-learn=0.20.3
+  - scipy=1.2.1
   - sip=4.19.8
   - snuggs=1.4.3
   - tk=8.6.9
@@ -99,6 +101,7 @@ dependencies:
   - xorg-xproto=7.0.31
   - cffi=1.12.3
   - curl=7.64.1
+  - freetype=2.9.1
   - intel-openmp=2019.3
   - krb5=1.16.1
   - libcurl=7.64.1
@@ -106,11 +109,16 @@ dependencies:
   - libffi=3.2.1
   - libgcc-ng=8.2.0
   - libgfortran-ng=7.3.0
+  - libopenblas=0.3.3
+  - libpng=1.6.37
   - libpq=11.2
   - libstdcxx-ng=8.2.0
+  - libtiff=4.0.10
   - mkl=2019.3
   - ncurses=6.1
   - ninja=1.9.0
+  - numpy=1.16.3
+  - numpy-base=1.16.3
   - olefile=0.46
   - pillow=6.0.0
   - pip=19.1
@@ -118,7 +126,7 @@ dependencies:
   - pycparser=2.19
   - pyqt=5.9.2
   - pytest-cache=1.0
-  - python=3.6.8
+  - python=3.7.3
   - readline=7.0
   - setuptools=41.0.1
   - six=1.12.0
@@ -126,6 +134,7 @@ dependencies:
   - wheel=0.33.1
   - xz=5.2.4
   - zlib=1.2.11
+  - zstd=1.3.7
   - pytorch-cpu=1.1.0
   - torchvision-cpu=0.2.2
   - pip:

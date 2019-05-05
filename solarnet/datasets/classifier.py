@@ -41,7 +41,7 @@ class ClassifierDataset:
         self.x_files = [x for include, x in zip(mask, self.x_files) if include]
 
     def __len__(self) -> int:
-        return len(self.y)
+        return self.y.shape[0]
 
     def _transform_images(self, image: np.ndarray) -> np.ndarray:
         transforms = [

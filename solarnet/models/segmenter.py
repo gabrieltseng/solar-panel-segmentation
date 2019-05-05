@@ -69,7 +69,7 @@ class Segmenter(ResnetBase):
         # differ
         self.load_state_dict(state_dict, strict=False)
 
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
+    def forward(self, x):
         org_input = x
         x = self.relu(self.pretrained(x))
         # we reverse the outputs so that the smallest output
@@ -92,6 +92,6 @@ class UpBlock(nn.Module):
         self.batchnorm = nn.BatchNorm2d(out_channels)
         self.relu = nn.ReLU()
 
-    def forward(self, x_up: torch.Tensor, x_across: torch.Tensor) -> torch.Tensor:
+    def forward(self, x_up, x_across):
         joint = torch.cat((self.conv_transpose(x_up), self.conv_across(x_across)), dim=1)
         return self.batchnorm(self.relu(joint))

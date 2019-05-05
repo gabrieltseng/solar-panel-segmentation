@@ -1,5 +1,7 @@
 import torch
 import torch.nn.functional as F
+from torch.utils.data import DataLoader
+from torch.optim.optimizer import Optimizer
 from tqdm import tqdm
 import numpy as np
 from sklearn.metrics import roc_auc_score
@@ -8,8 +10,8 @@ from typing import Any, List, Tuple
 
 
 def train_classifier(model: torch.nn.Module,
-                     train_dataloader: torch.utils.data.DataLoader,
-                     val_dataloader: torch.utils.data.DataLoader,
+                     train_dataloader: DataLoader,
+                     val_dataloader: DataLoader,
                      warmup: int = 2,
                      patience: int = 5,
                      max_epochs: int = 100) -> None:
@@ -62,8 +64,8 @@ def train_classifier(model: torch.nn.Module,
 
 
 def train_segmenter(model: torch.nn.Module,
-                    train_dataloader: torch.utils.data.DataLoader,
-                    val_dataloader: torch.utils.data.DataLoader,
+                    train_dataloader: DataLoader,
+                    val_dataloader: DataLoader,
                     warmup: int = 2,
                     patience: int = 5,
                     max_epochs: int = 100) -> None:
@@ -114,9 +116,9 @@ def train_segmenter(model: torch.nn.Module,
 
 
 def _train_classifier_epoch(model: torch.nn.Module,
-                            optimizer: torch.optim.Optimizer,
-                            train_dataloader: torch.utils.data.DataLoader,
-                            val_dataloader: torch.utils.data.DataLoader
+                            optimizer: Optimizer,
+                            train_dataloader: DataLoader,
+                            val_dataloader: DataLoader
                             ) -> Tuple[Tuple[List[Any], float],
                                        Tuple[List[Any], float]]:
 
@@ -154,9 +156,9 @@ def _train_classifier_epoch(model: torch.nn.Module,
 
 
 def _train_segmenter_epoch(model: torch.nn.Module,
-                           optimizer: torch.optim.Optimizer,
-                           train_dataloader: torch.utils.data.DataLoader,
-                           val_dataloader: torch.utils.data.DataLoader
+                           optimizer: Optimizer,
+                           train_dataloader: DataLoader,
+                           val_dataloader: DataLoader
                            ) -> Tuple[List[Any], List[Any]]:
     t_losses, v_losses = [], []
     model.train()

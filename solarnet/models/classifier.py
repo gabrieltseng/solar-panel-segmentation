@@ -21,7 +21,7 @@ class Classifier(ResnetBase):
             nn.Sigmoid()
         )
 
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
+    def forward(self, x):
         x = self.pretrained(x)
         x = self.avgpool(x)
         return self.classifier(x.view(x.size(0), -1))

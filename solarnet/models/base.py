@@ -17,7 +17,7 @@ class ResnetBase(nn.Module):
         resnet = resnet34(pretrained=imagenet_base).float()
         self.pretrained = nn.Sequential(*list(resnet.children())[:-2])
 
-    def forward(self, x: torch.Tensor):
+    def forward(self, x):
         # Since this is just a base, forward() shouldn't directly
         # be called on it.
         raise NotImplementedError
