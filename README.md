@@ -1,4 +1,4 @@
-# Solar segmentation
+# Solar segmentation [![Build Status](https://travis-ci.com/gabrieltseng/solar-panel-segmentation.svg?branch=master)](https://travis-ci.com/gabrieltseng/solar-panel-segmentation)
 
 Finding solar panels using USGS satellite imagery.
 
