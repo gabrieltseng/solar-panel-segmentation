@@ -106,3 +106,17 @@ conda activate solar
 ```
 
 This pipeline can be tested by running `pytest`.
+
+[Docker](https://www.docker.com/) can also be used to run this code. To do this, first build the docker image:
+
+```bash
+docker build -t solar .
+```
+
+Then, use it to run a container, mounting the data folder to the container:
+
+```bash
+docker run -it \
+--mount type=bind,source=<PATH_TO_DATA>,target=/solar/data \
+solar /bin/bash
+```
