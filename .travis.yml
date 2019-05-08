@@ -22,4 +22,4 @@ install:
 
 script:
   - mypy solarnet
-- pytest
+  - pytest
