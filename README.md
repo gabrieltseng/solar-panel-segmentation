@@ -117,6 +117,6 @@ Then, use it to run a container, mounting the data folder to the container:
 
 ```bash
 docker run -it \
---mount type=bind,source=/Users/gabrieltseng/Documents/code/personal/solar-panel-segmentation/data,target=/solar/data \
+--mount type=bind,source=<PATH_TO_DATA>,target=/solar/data \
 solar /bin/bash
 ```
