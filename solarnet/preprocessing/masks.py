@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+from multiprocessing import Pool, TimeoutError
 from matplotlib.path import Path as PolygonPath
 from pathlib import Path
 from collections import defaultdict
@@ -14,6 +15,19 @@ IMAGE_SIZES = {
     'Stockton': (5000, 5000)
 }
 
+global_city = None
+global_polygon_pixels = None
+global_masked_city = None
+
+def f(x):
+    global global_city, global_polygon_pixels, global_masked_city
+    image, polygons = x
+    x_size, y_size = IMAGE_SIZES[global_city]
+    mask = np.zeros((x_size, y_size))
+    for polygon in polygons:
+        mask += MaskMaker.make_mask(global_polygon_pixels[polygon], (x_size, y_size))
+    np.save(global_masked_city / f"{image}.npy", mask)
+
 
 class MaskMaker:
     """This class looks for all files defined in the metadata, and
@@ -26,8 +40,10 @@ class MaskMaker:
     """
 
     def __init__(self, data_folder: Path = Path('data')) -> None:
+        global global_data_folder
         self.data_folder = data_folder
-
+        global_data_folder = data_folder
+        
     def _read_data(self) -> Tuple[defaultdict, dict]:
         metadata_folder = self.data_folder / 'metadata'
 
@@ -44,22 +60,25 @@ class MaskMaker:
 
     def process(self) -> None:
 
+        global global_polygon_pixels
         polygon_images, polygon_pixels = self._read_data()
+        global_polygon_pixels = polygon_pixels
 
         for city, files in polygon_images.items():
+            global global_city, global_masked_city
+            
             print(f'Processing {city}')
             # first, we make sure the mask file exists; if not,
             # we make it
             masked_city = self.data_folder / f"{city}_masks"
+            global_masked_city = masked_city
+            global_city = city
             x_size, y_size = IMAGE_SIZES[city]
             if not masked_city.exists(): masked_city.mkdir()
 
-            for image, polygons in tqdm(files.items()):
-                mask = np.zeros((x_size, y_size))
-                for polygon in polygons:
-                    mask += self.make_mask(polygon_pixels[polygon], (x_size, y_size))
-
-                np.save(masked_city / f"{image}.npy", mask)
+            with Pool(processes=8) as pool: 
+                for i in tqdm(pool.imap_unordered(f, files.items())):
+                    pass 
 
     @staticmethod
     def _csv_to_dict_polygon_pixels(polygon_pixels: pd.DataFrame) -> dict:
